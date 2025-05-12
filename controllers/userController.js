@@ -1,4 +1,5 @@
 import User from "../models/User.js"; // Import your User model
+import bcrypt from 'bcryptjs';
 
 // Get all users with optional search query
 // Get all users with the role 'client'
@@ -111,3 +112,45 @@ export const createUser = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+
+
+
+
+export const updateUser = async (req, res) => {
+    try {
+        const { username, email, currentPassword, newPassword } = req.body;
+        const user = await User.findById(req.params.id);
+        const { file } = req; // Multer will attach the uploaded file to req.file
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+        }
+
+        // Check if current password matches
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Le mot de passe actuel est incorrect.' });
+        }
+
+        // If newPassword is provided, hash it
+        if (newPassword) {
+            user.password = newPassword;
+        }
+
+        // Update user info
+        user.username = username || user.username;
+        user.email = email || user.email;
+
+        if (file) {
+            const imagePath = `/uploads/${file.filename}`;
+            user.image = imagePath; // Make sure your User model has an `image` field
+        }
+        await user.save();
+
+        res.status(200).json({ message: 'Profil mis à jour avec succès.', user });
+    } catch (err) {
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+};
+

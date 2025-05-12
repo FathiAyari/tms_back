@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['active', 'inactive', 'banned'],
         default: 'inactive'
+    },
+    // Image field added here
+    image: {
+        type: String, // Stores the URL of the image or the image file path
+        default: "" // Optionally set a default value or leave empty
     }
 });
 

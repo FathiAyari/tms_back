@@ -86,7 +86,7 @@ export const getPosts = async (req, res) => {
         if (status) query.status = status;  // Add status filter if provided
         // Populate the 'author' field (or whatever the user field is called in your Post model)
         const posts = await Post.find(query)
-            .populate("author", "username email")  // Adjust the fields you want to populate from the User model
+            .populate("author", "username email image")  // Adjust the fields you want to populate from the User model
             .sort({ createdAt: -1 })
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber);

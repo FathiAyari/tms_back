@@ -71,7 +71,7 @@ export const getReviews = async (req, res) => {
         const query = search ? { user: search } : {};  // If userId is passed, filter by user ID
 
         const reviews = await Review.find(query)  // Apply the filter condition if userId is provided
-            .populate("user", "username email")
+            .populate("user", "username email image")
             .sort({ createdAt: -1 });
 
         res.status(200).json({

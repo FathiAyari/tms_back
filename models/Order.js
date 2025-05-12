@@ -17,7 +17,27 @@ const orderSchema = new mongoose.Schema(
             enum: ["En attente", "Confirmée", "Livrée", "Annulée"],
             default: "En attente",
         },
-        destination: {
+        destinationAdress: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        sourceAdress: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        destinationCountry: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        sourceCountry: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        adminNotes: {
             type: String,
             trim: true,
             default: "",
@@ -33,6 +53,28 @@ const orderSchema = new mongoose.Schema(
             default: "Non payé",
         },
         totalAmount: {
+            type: Number,
+            required: false, // optional
+            min: 0,
+        },
+        type: {
+            type: String,
+            enum: [
+                "Fragile",
+                "Périssable",
+                "Électronique",
+                "Documents",
+                "Vêtements",
+                "Meubles",
+                "Produits chimiques",
+                "Lourd",
+                "Volumineux",
+                "Standard"
+            ],
+            default: "Standard",
+        },
+
+        weight: {
             type: Number,
             required: false, // optional
             min: 0,

@@ -3,31 +3,22 @@ import {
     getUsers,
     getUserById,
     updateUserStatus,
+    updateUser,
     deleteUser,
     createUser,
 } from "../controllers/userController.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
-// ========================
-// User Collection Routes
-// ========================
-// POST / - Create a new user
+// Collection routes
 router.post("/", createUser);
-
-// GET / - Retrieve all users
 router.get("/", getUsers);
 
-// ========================
-// Single User Routes
-// ========================
-// GET /:id - Retrieve a single user by ID
+// Single user routes
 router.get("/:id", getUserById);
-
-// PATCH /:id/status - Update a user's status (active/inactive)
 router.patch("/:id/status", updateUserStatus);
-
-// DELETE /:id - Delete a user by ID
+router.patch("/:id",upload.single("image") ,updateUser); // <-- newly added
 router.delete("/:id", deleteUser);
 
 export default router;

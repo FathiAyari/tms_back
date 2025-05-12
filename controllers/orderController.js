@@ -6,10 +6,16 @@ export const addOrder = async (req, res) => {
     customerName,
     ownerId,
     status,
-    destination,
+    destinationAdress,
+    sourceAdress,
+    destinationCountry,
+    sourceCountry,
+    adminNotes,
     paymentMethod,
     paymentStatus,
     totalAmount,
+    type,
+    weight,
     notes,
   } = req.body;
 
@@ -24,12 +30,17 @@ export const addOrder = async (req, res) => {
       customerName,
       ownerId,
       status,
-      destination,
+      destinationAdress,
+      sourceAdress,
+      destinationCountry,
+      sourceCountry,
+      adminNotes,
       paymentMethod,
       paymentStatus,
       totalAmount,
+      type,
+      weight,
       notes,
-
     });
 
     res.status(201).json({
@@ -53,17 +64,14 @@ export const getOrders = async (req, res) => {
   try {
     const limitNumber = parseInt(limit, 10);
     const pageNumber = parseInt(page, 10);
-    const { search } = req.query;  // Get userId from query parameters
-    const query = search ? { ownerId: search } : {};  // If userId is passed, filter by user ID
-
-
+    const query = search ? { ownerId: search } : {};
 
     if (status) {
       query.status = status;
     }
 
     const orders = await Order.find(query)
-        .populate("ownerId", "email username") // assuming "name" is the client's name field
+        .populate("ownerId", "email username")
         .sort({ createdAt: -1 })
         .skip((pageNumber - 1) * limitNumber)
         .limit(limitNumber);
@@ -91,8 +99,7 @@ export const getOneOrder = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const order = await Order.findById(id)
-  .populate("ownerId", "email username") ;// assuming "name" is the client's name field
+    const order = await Order.findById(id).populate("ownerId", "email username");
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -119,10 +126,16 @@ export const updateOrder = async (req, res) => {
     customerName,
     ownerId,
     status,
-    destination,
+    destinationAdress,
+    sourceAdress,
+    destinationCountry,
+    sourceCountry,
+    adminNotes,
     paymentMethod,
     paymentStatus,
     totalAmount,
+    type,
+    weight,
     notes,
   } = req.body;
 
@@ -138,10 +151,16 @@ export const updateOrder = async (req, res) => {
     order.customerName = customerName || order.customerName;
     order.ownerId = ownerId || order.ownerId;
     order.status = status || order.status;
-    order.destination = destination || order.destination;
+    order.destinationAdress = destinationAdress || order.destinationAdress;
+    order.sourceAdress = sourceAdress || order.sourceAdress;
+    order.destinationCountry = destinationCountry || order.destinationCountry;
+    order.sourceCountry = sourceCountry || order.sourceCountry;
+    order.adminNotes = adminNotes || order.adminNotes;
     order.paymentMethod = paymentMethod || order.paymentMethod;
     order.paymentStatus = paymentStatus || order.paymentStatus;
     order.totalAmount = totalAmount ?? order.totalAmount;
+    order.type = type || order.type;
+    order.weight = weight ?? order.weight;
     order.notes = notes || order.notes;
 
     const updatedOrder = await order.save();
